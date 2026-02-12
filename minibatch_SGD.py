@@ -6,6 +6,8 @@
 # 
 # **NOTE** this model also uses gradient descent. 
 
+
+
 # %%
 import numpy as np
 
@@ -56,7 +58,8 @@ def fit_mini_batch_sgd(self, X, y):
     self.b_ = np.float_(0.)
  
     n_batches = np.ceil(X.shape[0] / self.batch_size)
-     # determine indices of mini-batches.  
+
+    # list containing n_batches number of mini-batches. 
     batch_list = [[] for i in range(n_batches)]
 
     for i in range(self.n_iter):
@@ -65,7 +68,7 @@ def fit_mini_batch_sgd(self, X, y):
         idx_list = np.random.shuffle([range(X.shape[0])])
 
         # make the mini_batches by pulling from X.
-        for i in range(self.batch_size):                                     # repeat _batchsize_ number of times
+        for i in range(self.batch_size):                                # repeat _batchsize_ number of times
             for list_num in range(batch_list):                          # for each list:
                 batch_list[list_num][i] = X[idx_list[list_num + i]]     # place a value from X into a minibatch. 
 
@@ -79,6 +82,7 @@ def fit_mini_batch_sgd(self, X, y):
             loss = (-y.dot(np.log(output)) - ((1-y).dot(np.log(1-output)))) / len(batch)
             self.losses.append(loss)
 
+    # TODO add in per-epoch error tracking. 
 
     return self
 
