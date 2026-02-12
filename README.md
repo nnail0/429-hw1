@@ -6,6 +6,9 @@ programs in the textbook.
 
 ```python
 import numpy as np
+import warnings
+warnings.filterwarnings('ignore')
+
 ```
 
 
@@ -38,8 +41,7 @@ class AdalineGD(object):
         Returns:
         self : Object
         """
-        #TODO add a column of 1's to X to properly absorb.
-        n = X.shape[0] 
+        n = X.shape[0] #number of samples
         m = X.shape[1] #number of features in dataset
         x_0 = np.ones((n,1))
         X = np.hstack((x_0,X))
@@ -109,7 +111,6 @@ class LogisticRegressionGD(object):
         Returns:
         self : Instance of LogisticRegressionGD
         """
-        #TODO add a column of 1's to X to properly absorb.
         n = X.shape[0] 
         m = X.shape[1] #number of features in dataset
         x_0 = np.ones((n,1))
@@ -122,13 +123,16 @@ class LogisticRegressionGD(object):
                                               #absorbed bias
         
         self.losses_ = []
-
+        print("unique y:", np.unique(y))
+        print("min/max y:", y.min(), y.max())
+        print("dtype y:", y.dtype)
 
         for _ in range(self.n_inter):
             net_input = self.net_input(X)
             output = self.activation(net_input)
             errors = (y - output)
-            self.w_  += self.eta * 2.0 * X.T.dot(errors) / n
+            self.w_  += self.eta * X.T.dot(errors) / n
+
             loss = (-y.dot(np.log(output)) - ((1 - y).dot(np.log(1 - output)))
                    )/ n
             self.losses_.append(loss)
@@ -197,13 +201,21 @@ print('URL:', s)
 df = pd.read_csv(s,
                  header=None,
                  encoding='utf-8')
+df_wine = pd.read_csv('https://archive.ics.uci.edu/ml/'
+                      'machine-learning-databases/'
+                      'wine/wine.data',
+                       header=None,
+                       encoding='utf-8')
 
 #select setosa and versicolor
-y = df.iloc[0:100, 4].values
-y = np.where(y == 'Iris-setosa', -1, 1)
+y1 = df.iloc[0:100, 4].values
+y1 = np.where(y1 == 'Iris-setosa', -1, 1)
+y2 = df_wine.iloc[0:100, 0]
+y2 = np.where(y2 == 2, 1, -1)
 
 #extract sepal length and petal length
-X = df.iloc[0:100, [0,2]].values
+X1 = df.iloc[0:100, [0,2]].values
+X2 = df_wine.iloc[0:100, [1,2]].values
 ```
 
     URL: https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data
@@ -212,18 +224,22 @@ X = df.iloc[0:100, [0,2]].values
 
 ```python
 #standarize
-X_std = np.copy(X)
-X_std[:,0] = (X[:,0] - X[:,0].mean()) / X[:,0].std()
-X_std[:,1] = (X[:,1] - X[:,1].mean()) / X[:,1].std()
+X_std1 = np.copy(X1)
+X_std1[:,0] = (X1[:,0] - X1[:,0].mean()) / X1[:,0].std()
+X_std1[:,1] = (X1[:,1] - X1[:,1].mean()) / X1[:,1].std()
+#standarize
+X_std2 = np.copy(X2)
+X_std2[:,0] = (X2[:,0] - X2[:,0].mean()) / X2[:,0].std()
+X_std2[:,1] = (X2[:,1] - X2[:,1].mean()) / X2[:,1].std()
 ```
 
 
 ```python
-ada_gd = AdalineGD(n_inter=100, eta=0.01)
-ada_gd.fit(X_std, y)
+ada_gd = AdalineGD(n_inter=10000, eta=0.01)
+ada_gd.fit(X_std1, y1)
 
-plot_decision_regions(X_std, y, classifier=ada_gd)
-plt.title('Adaline - Gradient Descent')
+plot_decision_regions(X_std1, y1, classifier=ada_gd)
+plt.title('AdalineGD - Iris')
 plt.xlabel('sepal length [standardized]')
 plt.ylabel('petal length [standardized]')
 plt.legend(loc='upper left')
@@ -231,75 +247,11 @@ plt.tight_layout()
 plt.show()
 ```
 
-    /var/folders/q8/dkdmw0695vz4xd77f20xf2h00000gp/T/ipykernel_16002/3419362327.py:25: UserWarning: You passed a edgecolor/edgecolors ('black') for an unfilled marker ('x').  Matplotlib is ignoring the edgecolor in favor of the facecolor.  This behavior may change in the future.
-      plt.scatter(x=X[y==cl,0],
-
-
 
     
-![png](output_7_1.png)
+![png](output_7_0.png)
     
 
-
-
-```python
-s = os.path.join('https://archive.ics.uci.edu', 'ml',
-                 'machine-learning-databases',
-                 'iris','iris.data')
-print('URL:', s)
-df = pd.read_csv(s,
-                 header=None,
-                 encoding='utf-8')
-
-#select setosa and versicolor
-y = df.iloc[0:100, 4].values
-
-
-
-#extract sepal length and petal length
-X = df.iloc[0:100, [0,2]].values
-y = np.where(y == 'Iris-setosa', 0, 1)
-```
-
-    URL: https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data
-
-
-
-```python
-lrgd = LogisticRegressionGD(eta=0.01,
-                             n_inter=100,
-                             random_state=1)
-lrgd.fit(X_std, y)
-plot_decision_regions(X_std, y, classifier=lrgd)
-
-plt.title('Logistic - Gradient Descent')
-plt.xlabel('Petal length [standardized]')
-plt.ylabel('Petal width [standardized]')
-plt.legend(loc='upper left')
-plt.tight_layout()
-plt.show()
-```
-
-    /var/folders/q8/dkdmw0695vz4xd77f20xf2h00000gp/T/ipykernel_16002/3419362327.py:25: UserWarning: You passed a edgecolor/edgecolors ('black') for an unfilled marker ('x').  Matplotlib is ignoring the edgecolor in favor of the facecolor.  This behavior may change in the future.
-      plt.scatter(x=X[y==cl,0],
-
-
-
-    
-![png](output_9_1.png)
-    
-
-
-# ANSWER 1 WOULD GO HERE
-
-# Problem 2
-Compare the performance of Adaline and logistic regression (bias absorbed versions) on the Iris
-and Wine datasets that can be obtained from the UCI machine learning repository. You may use the Python
-program given in our textbook (Page 117) to import the datasets.
-- Iris dataset - You may consider the samples with the labels setosa, versicolor to form a training set for binary classification.
-- Wine dataset - You may consider the samples with in the first two classes (1 and 2) to form a training set for binary classification.
-
-The comparisons should be done based on the convergence of the loss. In order to make apple-to-apple comparisons, you should use the same hyperparameters and number of epochs for both learning algorithms.
 
 
 ```python
@@ -313,7 +265,65 @@ plt.show()
 
 
     
-![png](output_12_0.png)
+![png](output_8_0.png)
+    
+
+
+
+```python
+s = os.path.join('https://archive.ics.uci.edu', 'ml',
+                 'machine-learning-databases',
+                 'iris','iris.data')
+
+df_wine = pd.read_csv('https://archive.ics.uci.edu/ml/'
+                      'machine-learning-databases/'
+                      'wine/wine.data',
+                       header=None,
+                       encoding='utf-8')
+print('URL:', s)
+
+df = pd.read_csv(s,
+                 header=None,
+                 encoding='utf-8')
+
+#select setosa and versicolor
+y1 = df.iloc[0:100, 4].values
+y1 = np.where(y1 == 'Iris-setosa', 0, 1)
+y2 = df_wine.iloc[0:100, 0]
+y2 = np.where(y2 == 2, 1, 0)
+
+#extract sepal length and petal length
+X1 = df.iloc[0:100, [0,2]].values
+X2 = df_wine.iloc[0:100, [1,2]].values
+```
+
+    URL: https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data
+
+
+
+```python
+lrgd = LogisticRegressionGD(eta=0.01,
+                             n_inter=10000,
+                             random_state=1)
+lrgd.fit(X_std1, y1)
+plot_decision_regions(X_std1, y1, classifier=lrgd)
+
+plt.title('LogisticRegressionGD - Iris')
+plt.xlabel('Petal length [standardized]')
+plt.ylabel('Petal width [standardized]')
+plt.legend(loc='upper left')
+plt.tight_layout()
+plt.show()
+```
+
+    unique y: [0 1]
+    min/max y: 0 1
+    dtype y: int64
+
+
+
+    
+![png](output_10_1.png)
     
 
 
@@ -329,13 +339,117 @@ plt.show()
 
 
     
+![png](output_11_0.png)
+    
+
+
+
+```python
+ada_gd2 = AdalineGD(n_inter=1000, eta=0.1)
+ada_gd2.fit(X_std2, y2)
+
+plot_decision_regions(X_std2, y2, classifier=ada_gd2)
+plt.title('AdalineGD - Wine')
+plt.xlabel('Alcohol [standardized]')
+plt.ylabel('Malicacid [standardized]')
+plt.legend(loc='upper left')
+plt.tight_layout()
+plt.show()
+```
+
+
+    
+![png](output_12_0.png)
+    
+
+
+
+```python
+plt.plot(range(1, len(ada_gd2.cost_) + 1),
+         ada_gd2.cost_, marker='o')
+plt.xlabel('Epochs')
+plt.ylabel('Sum-squared-error')
+plt.tight_layout()
+plt.show()
+```
+
+
+    
 ![png](output_13_0.png)
     
 
 
-# ANSWER 2 WOULD GO HERE
+
+```python
+lrgd2 = LogisticRegressionGD(eta=0.1,
+                             n_inter=1000,
+                             random_state=1)
+lrgd2.fit(X_std2, y2)
+plot_decision_regions(X_std2, y2, classifier=lrgd2)
+
+plt.title('LogisticRegressionGB - Wine')
+plt.xlabel('Alcohol [standardized]')
+plt.ylabel('Malicacid [standardized]')
+plt.legend(loc='upper left')
+plt.tight_layout()
+plt.show()
+```
+
+    unique y: [0 1]
+    min/max y: 0 1
+    dtype y: int64
+
+
+
+    
+![png](output_14_1.png)
+    
+
 
 
 ```python
 
+plt.plot(range(1, len(lrgd2.losses_) + 1),
+         lrgd2.losses_, marker='o')
+plt.xlabel('Epochs')
+plt.ylabel('Cross-Entropy')
+plt.tight_layout()
+plt.show()
 ```
+
+
+    
+![png](output_15_0.png)
+    
+
+
+# ANSWER 1 WOULD GO HERE
+
+# Problem 2
+Compare the performance of Adaline and logistic regression (bias absorbed versions) on the Iris
+and Wine datasets that can be obtained from the UCI machine learning repository. You may use the Python
+program given in our textbook (Page 117) to import the datasets.
+- Iris dataset - You may consider the samples with the labels setosa, versicolor to form a training set for binary classification.
+- Wine dataset - You may consider the samples with in the first two classes (1 and 2) to form a training set for binary classification.
+
+The comparisons should be done based on the convergence of the loss. In order to make apple-to-apple comparisons, you should use the same hyperparameters and number of epochs for both learning algorithms.
+
+# ANSWER 2 WOULD GO HERE
+
+# Problem 3
+
+
+```python
+# Code goes here
+```
+
+Answer 3 goes here...
+
+# Problem 4
+
+
+```python
+# Code goes here
+```
+
+Answer 4 goes here...
