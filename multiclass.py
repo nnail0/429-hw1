@@ -15,37 +15,56 @@ This implementation uses a one-vs-many approach, where different perceptrons are
 
 """
 
-data = pd.read_csv("data/iris.data", header=None, encoding='utf-8')
-# print(data.tail())
+class Multiclass():
+    """
+    Docstring for MultiPerceptron
+    """
 
-X = data.iloc[:, 0:3].to_numpy
+    def __init__(self):
+        self.setosa_neuron = Perceptron()
+        self.versicolor_neuron = Perceptron()
+        self.virginica_neuron = Perceptron()
+            
 
-print("X: ", X)
+def main():
+    mc = Multiclass()
+    mc.__init__()
 
-Y_ref = data.iloc[:, 4].to_numpy
+    # read data from data file
+    data = pd.read_csv("data/iris.data", header=None, encoding='utf-8') 
+    # print(data.tail())
 
-print("Y_ref:")
-print(Y_ref)
+    # find feature matrix and true class labels from data
+    X = data.iloc[:, [0, 1, 2, 3]].to_numpy()
+    Y_ref = data.iloc[:, 4].to_numpy()
 
-Y_setosa = np.copy(Y_ref)
-print(Y_setosa.shape)
-Y_versicolor = np.copy(Y_ref)
-Y_virginica = np.copy(Y_ref)
+    # make copies and modify for each perceptron. 
+    Y_setosa = Y_ref.copy()
+    Y_versicolor = Y_ref.copy()
+    Y_virginica = Y_ref.copy()
 
-Y_species = {"Iris_setosa" : Y_setosa, "Iris_virginica" : Y_virginica, "Iris_versicolor" : Y_versicolor}
+    Y_species = {"Iris-setosa" : Y_setosa, "Iris-virginica" : Y_virginica, "Iris-versicolor" : Y_versicolor}
 
-for name, arr in Y_species.items():
-    print(type(arr))
-    for i in range(arr.size):
-        arr[i] = np.where(i == name, 1, 0)
+    for name, arr in Y_species.items():
+        for i in range(arr.size):
+            if (arr[i] == name):
+                arr[i] = 1
+            else:
+                arr[i] = 0
+    
+    mc.setosa_neuron.fit(X, Y_setosa)
+    print("setosa trained")
+    mc.versicolor_neuron.fit(X, Y_versicolor)
+    print("versicolor trained")
+    mc.virginica_neuron.fit(X, Y_virginica)
+    print("virginica trained")
 
-print("modified Y values:")
-print(Y_setosa)
-print(Y_versicolor)
-print(Y_virginica)
+if __name__ == "__main__":
+    main()
 
-# TODO find a way to modify the true class labels. 
-setosa_neuron = Perceptron(eta=0.01, n_iter = 50, random_state = 1)
-versicolor_neuron = Perceptron(eta = 0.01, n_iter=50, random_state = 1)
-virginica_neuron = Perceptron(eta = 0.01, n_iter = 50, random_state = 1)
+        
+
+        
+        
+
 
