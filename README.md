@@ -424,13 +424,13 @@ print(f'LogisticRegression - Iris {LR_IRIS_t} ms')
 
 
     
-![png](images/output_12_1.png)
+![png](data/output_12_1.png)
     
 
 
 
     
-![png](images/output_12_2.png)
+![png](data/output_12_2.png)
     
 
 
@@ -439,7 +439,7 @@ print(f'LogisticRegression - Iris {LR_IRIS_t} ms')
 
 
     
-![png](images/output_12_4.png)
+![png](data/output_12_4.png)
     
 
 
@@ -515,19 +515,19 @@ print(f'LogisticRegression - Wine - GD {LR_GD_WINE_t} ms')
 
 
     
-![png](images/output_13_0.png)
+![png](data/output_13_0.png)
     
 
 
 
     
-![png](images/output_13_1.png)
+![png](data/output_13_1.png)
     
 
 
 
     
-![png](images/output_13_2.png)
+![png](data/output_13_2.png)
     
 
 
@@ -536,7 +536,7 @@ print(f'LogisticRegression - Wine - GD {LR_GD_WINE_t} ms')
 
 
     
-![png](images/output_13_4.png)
+![png](data/output_13_4.png)
     
 
 
@@ -578,13 +578,13 @@ plt.show()
 
 
     
-![png](images/output_15_0.png)
+![png](data/output_15_0.png)
     
 
 
 
     
-![png](images/output_15_1.png)
+![png](data/output_15_1.png)
     
 
 
@@ -740,7 +740,7 @@ plt.show()
 
 
     
-![png](images/output_20_0.png)
+![png](data/output_20_0.png)
     
 
 
@@ -837,31 +837,31 @@ print(f'LogisticRegression - Wine - MiniBatchSGD {LR_MBATCH_WINE_t} ms')
 
 
     
-![png](images/output_23_0.png)
+![png](data/output_23_0.png)
     
 
 
 
     
-![png](images/output_23_1.png)
+![png](data/output_23_1.png)
     
 
 
 
     
-![png](images/output_23_2.png)
+![png](data/output_23_2.png)
     
 
 
 
     
-![png](images/output_23_3.png)
+![png](data/output_23_3.png)
     
 
 
 
     
-![png](images/output_23_4.png)
+![png](data/output_23_4.png)
     
 
 
