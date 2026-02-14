@@ -242,7 +242,13 @@ class LogisticRegression(object):
 ```
 
 # Task #1 Report
-To absorb the bias, we initialized the weight vector `self.w_` to be one dimension larger than the number of features and set the bias to be the first element, `self.w_[0]`. Leaving us with a dimension probelm: $$X\in \mathbb{R}^{n\times m}$$$$ w\in \mathbb{R}^{m+1}$$ Since we prepended the bias to the top of the weight vector, the dimension of the feature matrix $X$ needed to be adjusted to be able to compute the dot product of $X$ and $w$. To make the dimensions line up, we prepended a column of 1's to the features matrix $X$ making the dimensions $$X \in \mathbb{R}^{n\times m+1}$$ Therefore, giving us this linear combination: $$b(1)+w_1(x_1) + ... + w_n(x_n)$$ which is equivalent to $$[w_0(x_0)+w_1(x_1) + ... + w_n(x_n)]+b$$
+To absorb the bias, we initialized the weight vector `self.w_` to be one dimension larger than the number of features and set the bias to be the first element, `self.w_[0]`. Leaving us with a dimension problem: 
+
+$$ X\in \mathbb{R}^{n\times m} $$
+
+$$ w\in \mathbb{R}^{m+1} $$
+
+Since we prepended the bias to the top of the weight vector, the dimension of the feature matrix $X$ needed to be adjusted to be able to compute the dot product of $X$ and $w$. To make the dimensions line up, we prepended a column of 1's to the features matrix $X$ making the dimensions $$X \in \mathbb{R}^{n\times m+1}$$ Therefore, giving us this linear combination: $$b(1)+w_1(x_1) + ... + w_n(x_n)$$ which is equivalent to $$[w_0(x_0)+w_1(x_1) + ... + w_n(x_n)]+b$$
 
 ## Task #2
 
@@ -412,19 +418,19 @@ print(f'LogisticRegression - Iris {LR_IRIS_t} ms')
 
 
     
-![png](output_12_0.png)
+![png](images/output_12_0.png)
     
 
 
 
     
-![png](output_12_1.png)
+![png](images/output_12_1.png)
     
 
 
 
     
-![png](output_12_2.png)
+![png](images/output_12_2.png)
     
 
 
@@ -433,7 +439,7 @@ print(f'LogisticRegression - Iris {LR_IRIS_t} ms')
 
 
     
-![png](output_12_4.png)
+![png](images/output_12_4.png)
     
 
 
@@ -509,19 +515,19 @@ print(f'LogisticRegression - Wine - GD {LR_GD_WINE_t} ms')
 
 
     
-![png](output_13_0.png)
+![png](images/output_13_0.png)
     
 
 
 
     
-![png](output_13_1.png)
+![png](images/output_13_1.png)
     
 
 
 
     
-![png](output_13_2.png)
+![png](images/output_13_2.png)
     
 
 
@@ -530,7 +536,7 @@ print(f'LogisticRegression - Wine - GD {LR_GD_WINE_t} ms')
 
 
     
-![png](output_13_4.png)
+![png](images/output_13_4.png)
     
 
 
@@ -572,13 +578,13 @@ plt.show()
 
 
     
-![png](output_15_0.png)
+![png](images/output_15_0.png)
     
 
 
 
     
-![png](output_15_1.png)
+![png](images/output_15_1.png)
     
 
 
@@ -734,7 +740,7 @@ plt.show()
 
 
     
-![png](output_20_0.png)
+![png](images/output_20_0.png)
     
 
 
@@ -831,31 +837,31 @@ print(f'LogisticRegression - Wine - MiniBatchSGD {LR_MBATCH_WINE_t} ms')
 
 
     
-![png](output_23_0.png)
+![png](images/output_23_0.png)
     
 
 
 
     
-![png](output_23_1.png)
+![png](images/output_23_1.png)
     
 
 
 
     
-![png](output_23_2.png)
+![png](images/output_23_2.png)
     
 
 
 
     
-![png](output_23_3.png)
+![png](images/output_23_3.png)
     
 
 
 
     
-![png](output_23_4.png)
+![png](images/output_23_4.png)
     
 
 
@@ -863,3 +869,13 @@ print(f'LogisticRegression - Wine - MiniBatchSGD {LR_MBATCH_WINE_t} ms')
     LogisticRegression - Wine - SGD 793.843 ms
     LogisticRegression - Wine - MiniBatchSGD 101.821 ms
 
+## Task #4 Report
+
+The code for task 4 is bundled above. 
+
+To implement Problem 4, we adapted the original Logistic Regression model to do two things:
+1. Shuffle the feature matrix X and the true labels Y to add stochastic behavior to the gradient descent. 
+2. Perform model fitting on batches of the data, updating the model more frequently. 
+
+To test the performance of the model compared to standard gradient descent and stochastic gradient descent, we tested all three models at an eta of 0.01 and for 1000 epochs.
+From this, we see that the  mini-batch SGD model to converge to a soluton much faster than a standard SGD model that trains on the full dataset each time. In addition to this, the runtime of the model, despite taking some time longer to run, is many times faster than a standard SGD model ran on the entire set at a time. This indicates a more efficient training process without notable sacrifices in classification accuracy. 
