@@ -418,7 +418,7 @@ print(f'LogisticRegression - Iris {LR_IRIS_t} ms')
 
 
     
-![png](images/output_12_0.png)
+![png](data/output_12_0.png)
     
 
 
